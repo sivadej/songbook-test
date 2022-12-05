@@ -72,9 +72,7 @@ export default function Home() {
               title: newSongTitle,
               artist: newSongArtist,
             });
-            console.log(res);
-            const success = true;
-            if (success) {
+            if (res.id) {
               setNewSongTitle("");
               setNewSongArtist("");
             }
