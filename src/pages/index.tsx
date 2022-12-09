@@ -3,20 +3,22 @@ import { trpc } from "../utils/trpc";
 
 export default function Home() {
   const [searchInput, setSearchInput] = useState("");
-
   const [newSongTitle, setNewSongTitle] = useState("");
   const [newSongArtist, setNewSongArtist] = useState("");
 
-  const { data: songList, refetch: refetchSongList } =
-    trpc.song.getByTitleOrArtist.useQuery(
-      {
-        search: searchInput,
-      },
-      {
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-      }
-    );
+  const {
+    data: songList,
+    refetch: refetchSongList,
+    isLoading,
+  } = trpc.song.getByTitleOrArtist.useQuery(
+    {
+      search: searchInput,
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    }
+  );
   const { data: allSongs, refetch: refetchAllSongs } =
     trpc.song.getAllSongs.useQuery(undefined, {
       refetchOnMount: false,
@@ -40,6 +42,7 @@ export default function Home() {
           type="search"
         />
       </form>
+      {isLoading ? "loading..." : null}
       <div className="m-2 border border-gray-800 p-3">
         {songList
           ? songList.map((song) => (
@@ -75,6 +78,8 @@ export default function Home() {
             if (res.id) {
               setNewSongTitle("");
               setNewSongArtist("");
+              refetchAllSongs();
+              refetchSongList();
             }
           }}
         >
